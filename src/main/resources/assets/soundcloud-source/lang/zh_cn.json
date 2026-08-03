@@ -1,0 +1,15 @@
+{
+  "plugin.soundcloud.source": "SoundCloud",
+  "source.soundcloud": "SoundCloud",
+  "config.soundcloud.source.enabled": "启用",
+  "config.soundcloud.source.client_id": "客户端 ID",
+  "config.soundcloud.source.validation.client_id": "客户端 ID 只能包含字母、数字、下划线或连字符。",
+  "error.soundcloud.disabled": "SoundCloud 音源已禁用。",
+  "error.soundcloud.invalid_query": "SoundCloud 搜索内容无效或过长。",
+  "error.soundcloud.invalid_track_id": "这个 SoundCloud 曲目 ID 无效。",
+  "error.soundcloud.blocked": "这个 SoundCloud 曲目已被屏蔽。",
+  "error.soundcloud.no_progressive": "SoundCloud 没有提供兼容的渐进式 MP3 流。",
+  "error.soundcloud.track_not_found": "未找到 SoundCloud 曲目。",
+  "error.soundcloud.unsupported_link": "这不是公开的 SoundCloud 单曲链接。",
+  "error.soundcloud.request_failed": "SoundCloud 请求失败。"
+}

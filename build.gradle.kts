@@ -1,14 +1,15 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.3.21"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.21"
-    id("com.gradleup.shadow") version "9.4.1"
+    id("org.jetbrains.kotlin.jvm") version "2.4.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.0"
+//    id("com.gradleup.shadow") version "9.4.2"
     id("idea")
 }
 
 version = providers.gradleProperty("version").get()
 group = providers.gradleProperty("maven_group").get()
+val projectName = project.name
 
 repositories {
     mavenCentral()
@@ -34,6 +35,8 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:" + providers.gradleProperty("kotlinx_serialization_version").get())
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:" + providers.gradleProperty("coroutines_version").get())
     // MoeMusic provides this API at runtime. Do not shade it into standalone plugin jars.
     compileOnly("org.lolicode.moemusic:api:${providers.gradleProperty("plugin_api_version").get()}")
 
@@ -74,26 +77,27 @@ idea {
 }
 
 tasks.jar {
-    inputs.property("projectName", project.name)
+    inputs.property("projectName", projectName)
 
     from("LICENSE") {
-        rename { "${it}_${project.name}" }
+        rename { "${it}_${projectName}" }
     }
 }
 
-tasks.shadowJar {
-    archiveClassifier.set("full")
-
-    /*
-     * Add third-party implementation dependencies above when your real plugin needs them.
-     * The shadow jar is the artifact users should put in config/moemusic/plugins/.
-     *
-     * Host-provided dependencies such as MoeMusic API, Kotlin runtime, slf4j, and serialization
-     * stay outside this jar because the MoeMusic standalone plugin classloader delegates those
-     * packages to the parent runtime first.
-     */
-    dependencies {
-        exclude(dependency("org.jetbrains.kotlin:.*:.*"))
-        exclude(dependency("org.jetbrains:annotations:.*"))
-    }
-}
+//tasks.shadowJar {
+//    archiveClassifier.set("full")
+//
+//    /*
+//     * Add third-party implementation dependencies above when your real plugin needs them.
+//     * The shadow jar is the artifact users should put in config/moemusic/plugins/.
+//     *
+//     * Host-provided dependencies such as MoeMusic API, Kotlin runtime, slf4j, and serialization
+//     * stay outside this jar because the MoeMusic standalone plugin classloader delegates those
+//     * packages to the parent runtime first.
+//     */
+//    dependencies {
+//        exclude(dependency("org.jetbrains.kotlin:.*:.*"))
+//        exclude(dependency("org.jetbrains.kotlinx:.*:.*"))
+//        exclude(dependency("org.jetbrains:annotations:.*"))
+//    }
+//}

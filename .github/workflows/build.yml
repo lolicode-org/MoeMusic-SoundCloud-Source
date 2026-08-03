@@ -37,8 +37,6 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build
       - name: Upload all jars
         uses: actions/upload-artifact@v7
@@ -49,7 +47,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           archive: 'false'
-          path: build/libs/*-full.jar
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
       - name: Upload sources jar
         uses: actions/upload-artifact@v7
         with:
@@ -66,13 +66,18 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v8
         with:
+          # upload-artifact v7 doesn't support renaming uploaded files when not archived. As the name is not fixed, downloading all jars and removing sources for workaround
           name: All jars
           path: build/libs
 
+      - name: Remove sources jar
+        run: rm build/libs/*-sources.jar
+
       - name: Publish release
-        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228
         with:
           tag_name: ${{ github.event.inputs.tag_name }}
-          files: build/libs/*-full.jar
+          files: |
+            build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

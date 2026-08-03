@@ -1,41 +1,34 @@
-# MoeMusic Standalone Plugin Template
+# MoeMusic SoundCloud Source
 
-[简体中文](./README_zh.md) | English
+Standalone MoeMusic source for public SoundCloud tracks.
 
-Minimal standalone plugin template for [MoeMusic](https://github.com/lolicode-org/MoeMusic).
+> [!NOTE]
+> This project is fully vibe-coded, with limited manual review.
 
-This repository intentionally keeps the template small. For API behavior and contracts, use the MoeMusic API documentation.
+It uses the undocumented API used by SoundCloud's public web app and resolves a fresh progressive MP3 URL at playback time.
+Snipped, encrypted, HLS-only, and account-restricted tracks are unavailable. 
+Due to lack of api, no loudness normalization data can be provided. Expect lower volume for tracks from this source.
 
-## Contents
+An optional web client ID can be set in the plugin config; otherwise the source discovers one from the public web app.
 
-- `TemplatePlugin`: plugin identity, config spec, and source registration.
-- `TemplatePluginProvider`: Java SPI entry point for standalone JAR loading.
-- `TemplateConfig`: serializable TOML config model.
-- `TemplateMusicSource`: minimal searchable and identifier-resolvable source.
-- `assets/example/lang/`: bundled translations for the `example` plugin namespace.
+The resolution flow was checked against [yt-dlp's maintained SoundCloud extractor](https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/extractor/soundcloud.py) and Lavaplayer source.
 
-## Rename Before Use
+Build with ./gradlew build. Install the generated full jar from build/libs into config/moemusic/plugins/.
 
-1. Replace `com.example.moemusic.template` with your package.
-2. Change `PLUGIN_ID`, `CONFIG_ID`, and `SOURCE_ID` in `TemplatePlugin`.
-3. Move `assets/example/lang/` to the namespace used by your plugin ID.
-4. Update `META-INF/services/org.lolicode.moemusic.api.plugin.PluginProvider`.
-5. Replace the demo source logic with your real source implementation.
+---
 
-## Build
+# MoeMusic SoundCloud 音源
 
-```bash
-./gradlew build
-```
+面向公开 SoundCloud 单曲的 MoeMusic 独立音源插件。
 
-Install the generated `build/libs/*-full.jar` into:
+> [!NOTE]
+> 本项目完全由 AI 生成，仅进行了基本的人工审阅。
 
-```text
-config/moemusic/plugins/
-```
+插件使用 SoundCloud 公开网页所调用的 API，并在播放时解析新的渐进式 MP3 地址。试听片段、加密流、仅 HLS、需要帐号或受限的曲目不可用。
+由于 API 限制，无法提供响度均衡数据，因此该平台的曲目播放时的音量可能略低。
 
-Restart the server or client after changing plugin JARs.
+配置中可以填写网页客户端 ID；留空时插件会从公开网页应用中自动发现。
 
-## License
+解析流程参考了 [yt-dlp 持续维护的 SoundCloud 提取器](https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/extractor/soundcloud.py) 和 Lavaplayer 的实现。
 
-This template inherits the repository license, which is AGPL-3.0-or-later due to the core API's license.
+使用 ./gradlew build 构建，并将 build/libs 中生成的 full jar 放入 config/moemusic/plugins/。

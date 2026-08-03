@@ -1,0 +1,15 @@
+{
+  "plugin.soundcloud.source": "SoundCloud",
+  "source.soundcloud": "SoundCloud",
+  "config.soundcloud.source.enabled": "Enabled",
+  "config.soundcloud.source.client_id": "Client ID",
+  "config.soundcloud.source.validation.client_id": "Client ID must contain only letters, digits, underscores, or hyphens.",
+  "error.soundcloud.disabled": "The SoundCloud source is disabled.",
+  "error.soundcloud.invalid_query": "The SoundCloud search query is invalid or too long.",
+  "error.soundcloud.invalid_track_id": "That SoundCloud track ID is invalid.",
+  "error.soundcloud.blocked": "This SoundCloud track is blocked.",
+  "error.soundcloud.no_progressive": "SoundCloud did not provide a compatible progressive MP3 stream.",
+  "error.soundcloud.track_not_found": "SoundCloud track not found.",
+  "error.soundcloud.unsupported_link": "That SoundCloud link is not a public track link.",
+  "error.soundcloud.request_failed": "SoundCloud request failed."
+}

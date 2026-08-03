@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "moemusic-standalone-plugin-template"
+rootProject.name = "moemusic-soundcloud-source"
