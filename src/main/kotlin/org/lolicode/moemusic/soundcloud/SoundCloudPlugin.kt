@@ -14,8 +14,8 @@ object SoundCloudPlugin : Plugin {
     override val id: String = PLUGIN_ID
     override val configId: String = CONFIG_ID
     override val displayName: LocalizedText = LocalizedText.key("plugin.soundcloud.source")
-    override val version: String = "1.0.0"
-    override val supportedApiVersions: String = ">=2.0.0 <3.0.0"
+    override val version: String = "1.1.0"
+    override val supportedApiVersions: String = ">=2.2.0 <3.0.0"
 
     override val configSpec: PluginConfigSpec<SoundCloudConfig> =
         pluginConfigSpec(::SoundCloudConfig) {

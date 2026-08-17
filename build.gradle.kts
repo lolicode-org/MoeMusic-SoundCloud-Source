@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.4.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.0"
-//    id("com.gradleup.shadow") version "9.4.2"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.10"
+//    id("com.gradleup.shadow") version "9.6.1"
     id("idea")
 }
 
