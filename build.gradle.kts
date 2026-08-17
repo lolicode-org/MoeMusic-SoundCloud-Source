@@ -35,22 +35,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:" + providers.gradleProperty("kotlinx_serialization_version").get())
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:" + providers.gradleProperty("coroutines_version").get())
-    // MoeMusic provides this API at runtime. Do not shade it into standalone plugin jars.
+    // MoeMusic API transitively provides the guaranteed runtime baseline:
+    // Kotlin stdlib, kotlinx-coroutines, kotlinx-serialization (core + json), and SLF4J API.
     compileOnly("org.lolicode.moemusic:api:${providers.gradleProperty("plugin_api_version").get()}")
-
-    // Needed to compile @Serializable config classes. MoeMusic provides the runtime serializer stack.
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:${providers.gradleProperty("kotlinx_serialization_version").get()}")
-
-    // Runtime logger API is supplied by the host platform/MoeMusic runtime.
-    compileOnly("org.slf4j:slf4j-api:${providers.gradleProperty("slf4j_version").get()}")
 
     testImplementation(kotlin("test"))
     testImplementation("org.lolicode.moemusic:api:${providers.gradleProperty("plugin_api_version").get()}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${providers.gradleProperty("kotlinx_serialization_version").get()}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${providers.gradleProperty("coroutines_version").get()}")
-    testImplementation("org.slf4j:slf4j-api:${providers.gradleProperty("slf4j_version").get()}")
 }
 
 tasks.withType<JavaCompile>().configureEach {
