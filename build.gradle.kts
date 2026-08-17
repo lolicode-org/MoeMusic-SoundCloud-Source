@@ -13,24 +13,39 @@ group = providers.gradleProperty("maven_group").get()
 val projectName = project.name
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
-        name = "MoeMusic on Codeberg"
-        url = uri("https://codeberg.org/api/packages/lolicode/maven")
+        name = "Lolicode Releases"
+        url = uri("https://maven.lolicode.org/releases")
         content {
             includeGroupByRegex("org\\.lolicode.*")
         }
     }
-
-    // Optional fallback for developers who publish/test the MoeMusic API locally.
-    mavenLocal()
-
     maven {
-        name = "GitHubPackages MoeMusic"
+        name = "Lolicode Snapshots"
+        url = uri("https://maven.lolicode.org/snapshots")
+        content {
+            includeGroupByRegex("org\\.lolicode.*")
+        }
+    }
+    maven {
+        name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/lolicode-org/MoeMusic")
         credentials {
-            username = System.getenv("GITHUB_ACTOR").orEmpty()
-            password = System.getenv("GITHUB_TOKEN").orEmpty()
+            username = providers.gradleProperty("gpr.user")
+                .orElse(providers.environmentVariable("GITHUB_ACTOR"))
+                .orElse("")
+                .get()
+            password = providers.gradleProperty("gpr.key")
+                .orElse(providers.environmentVariable("GITHUB_PACKAGES_TOKEN"))
+                .orElse(providers.environmentVariable("PACKAGES_READ_TOKEN"))
+                .orElse(providers.environmentVariable("GITHUB_TOKEN"))
+                .orElse("")
+                .get()
+        }
+        content {
+            includeGroupByRegex("org\\.lolicode.*")
         }
     }
 }
