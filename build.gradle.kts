@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.4.10"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.4.10"
-//    id("com.gradleup.shadow") version "9.6.1"
     id("idea")
 }
 
@@ -15,6 +14,27 @@ val projectName = project.name
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        name = "Fabric"
+        url = uri("https://maven.fabricmc.net/")
+        content {
+            includeGroup("net.fabricmc")
+        }
+    }
+    maven {
+        name = "NeoForged"
+        url = uri("https://maven.neoforged.net/releases")
+        content {
+            includeGroup("net.neoforged.fancymodloader")
+        }
+    }
+    maven {
+        name = "MinecraftForge"
+        url = uri("https://maven.minecraftforge.net/")
+        content {
+            includeGroup("net.minecraftforge")
+        }
+    }
     maven {
         name = "Lolicode Releases"
         url = uri("https://maven.lolicode.org/releases")
@@ -50,10 +70,29 @@ repositories {
     }
 }
 
+val platformSourceSet = sourceSets.create("platform") {
+    compileClasspath += sourceSets.named("main").get().output
+    runtimeClasspath += sourceSets.named("main").get().output
+}
+
 dependencies {
     // MoeMusic API transitively provides the guaranteed runtime baseline:
     // Kotlin stdlib, kotlinx-coroutines, kotlinx-serialization (core + json), and SLF4J API.
     compileOnly("org.lolicode.moemusic:api:${providers.gradleProperty("plugin_api_version").get()}")
+
+    // Platform sourceSet: contains modloader bootstrap entrypoints.
+    // Isolated so main plugin code cannot accidentally use loader classes or their dependencies.
+    "platformCompileOnly"(sourceSets["main"].output)
+    "platformCompileOnly"("org.lolicode.moemusic:api:${providers.gradleProperty("plugin_api_version").get()}")
+    "platformCompileOnly"("net.fabricmc:fabric-loader:${providers.gradleProperty("fabric_loader").get()}") {
+        isTransitive = false
+    }
+    "platformCompileOnly"("net.neoforged.fancymodloader:loader:${providers.gradleProperty("neoforged_loader").get()}") {
+        isTransitive = false
+    }
+    "platformCompileOnly"("net.minecraftforge:javafmllanguage:${providers.gradleProperty("forge_loader").get()}") {
+        isTransitive = false
+    }
 
     testImplementation(kotlin("test"))
     testImplementation("org.lolicode.moemusic:api:${providers.gradleProperty("plugin_api_version").get()}")
@@ -84,28 +123,33 @@ idea {
     }
 }
 
+tasks.named<ProcessResources>("processPlatformResources") {
+    val resourceProperties = mapOf(
+        "version" to project.version,
+        "mod_id" to providers.gradleProperty("mod_id").get(),
+        "mod_name" to providers.gradleProperty("mod_name").get(),
+        "mod_description" to providers.gradleProperty("mod_description").get(),
+        "mod_author" to providers.gradleProperty("mod_author").get(),
+        "mod_license" to providers.gradleProperty("mod_license").get(),
+        "fabric_entrypoint" to providers.gradleProperty("fabric_entrypoint").get(),
+        "moemusic_version" to providers.gradleProperty("moemusic_version").get(),
+    )
+    inputs.properties(resourceProperties)
+    filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
+        expand(resourceProperties)
+    }
+}
+
 tasks.jar {
     inputs.property("projectName", projectName)
+
+    from(sourceSets["platform"].output)
 
     from("LICENSE") {
         rename { "${it}_${projectName}" }
     }
 }
 
-//tasks.shadowJar {
-//    archiveClassifier.set("full")
-//
-//    /*
-//     * Add third-party implementation dependencies above when your real plugin needs them.
-//     * The shadow jar is the artifact users should put in config/moemusic/plugins/.
-//     *
-//     * Host-provided dependencies such as MoeMusic API, Kotlin runtime, slf4j, and serialization
-//     * stay outside this jar because the MoeMusic standalone plugin classloader delegates those
-//     * packages to the parent runtime first.
-//     */
-//    dependencies {
-//        exclude(dependency("org.jetbrains.kotlin:.*:.*"))
-//        exclude(dependency("org.jetbrains.kotlinx:.*:.*"))
-//        exclude(dependency("org.jetbrains:annotations:.*"))
-//    }
-//}
+tasks.named<Jar>("sourcesJar") {
+    from(sourceSets["platform"].allSource)
+}
