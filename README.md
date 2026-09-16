@@ -13,7 +13,7 @@ An optional web client ID can be set in the plugin config; otherwise the source 
 
 The resolution flow was checked against [yt-dlp's maintained SoundCloud extractor](https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/extractor/soundcloud.py) and Lavaplayer source.
 
-Build with ./gradlew build. Install the generated full jar from build/libs into config/moemusic/plugins/.
+Build with ./gradlew build. Install the generated full jar from build/libs into `mods/` (for modded Minecraft only) or `config/moemusic/plugins/`.
 
 ---
 
@@ -31,4 +31,4 @@ Build with ./gradlew build. Install the generated full jar from build/libs into 
 
 解析流程参考了 [yt-dlp 持续维护的 SoundCloud 提取器](https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/extractor/soundcloud.py) 和 Lavaplayer 的实现。
 
-使用 ./gradlew build 构建，并将 build/libs 中生成的 full jar 放入 config/moemusic/plugins/。
+使用 ./gradlew build 构建，并将 build/libs 中生成的 full jar 放入 `mods`（仅适用于 Minecraft 模组端）或 `config/moemusic/plugins/`。
